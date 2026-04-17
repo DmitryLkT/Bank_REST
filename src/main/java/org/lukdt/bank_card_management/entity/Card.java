@@ -16,8 +16,9 @@ public class Card {
     @Column(name="card_number_encrypted", nullable = false)
     private String cardNumberEncrypted;
 
-    @Column(name="owner_id", nullable = false)
-    private Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="owner_id", nullable = false)
+    private User owner;
 
     @Column(name="issue_date", nullable = false)
     private LocalDate issueDate;
@@ -34,9 +35,9 @@ public class Card {
 
     public Card() {}
 
-    public Card(String cardNumberEncrypted, Long ownerId, LocalDate issueDate, LocalDate expiryDate, Status status, BigDecimal balance) {
+    public Card(String cardNumberEncrypted, User owner, LocalDate issueDate, LocalDate expiryDate, Status status, BigDecimal balance) {
         this.cardNumberEncrypted = cardNumberEncrypted;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.issueDate = issueDate;
         this.expiryDate = expiryDate;
         this.status = status;
@@ -55,12 +56,12 @@ public class Card {
         this.cardNumberEncrypted = cardNumberEncrypted;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public LocalDate getIssueDate() {
