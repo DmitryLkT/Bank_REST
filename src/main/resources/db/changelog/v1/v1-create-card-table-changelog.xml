@@ -38,7 +38,7 @@
 
     <changeSet id="v1-add-check-status" author="Dmitry Lk">
         <sql>
-            ALTER TABLE cards ADD CONSTRAINT chek_card_status CHECK (role IN ('ACTIVE', 'BLOCKED', 'EXPIRED'));
+            ALTER TABLE cards ADD CONSTRAINT chek_card_status CHECK (status IN ('ACTIVE', 'BLOCKED', 'EXPIRED'));
         </sql>
     </changeSet>
 </databaseChangeLog>
