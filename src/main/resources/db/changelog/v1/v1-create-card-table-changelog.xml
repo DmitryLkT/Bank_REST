@@ -41,4 +41,8 @@
             ALTER TABLE cards ADD CONSTRAINT chek_card_status CHECK (status IN ('ACTIVE', 'BLOCKED', 'EXPIRED'));
         </sql>
     </changeSet>
+
+    <changeSet id="v1-2-drop-issue-date" author="Dmitry Lk">
+        <dropColumn tableName="cards" columnName="issue_date"/>
+    </changeSet>
 </databaseChangeLog>

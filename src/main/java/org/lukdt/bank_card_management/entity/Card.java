@@ -20,9 +20,6 @@ public class Card {
     @JoinColumn(name="owner_id", nullable = false)
     private User owner;
 
-    @Column(name="issue_date", nullable = false)
-    private LocalDate issueDate;
-
     @Column(name="expiry_date", nullable = false)
     private LocalDate expiryDate;
 
@@ -35,10 +32,9 @@ public class Card {
 
     public Card() {}
 
-    public Card(String cardNumberEncrypted, User owner, LocalDate issueDate, LocalDate expiryDate, Status status, BigDecimal balance) {
+    public Card(String cardNumberEncrypted, User owner, LocalDate expiryDate, Status status, BigDecimal balance) {
         this.cardNumberEncrypted = cardNumberEncrypted;
         this.owner = owner;
-        this.issueDate = issueDate;
         this.expiryDate = expiryDate;
         this.status = status;
         this.balance = balance;
@@ -62,14 +58,6 @@ public class Card {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public LocalDate getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
     }
 
     public LocalDate getExpiryDate() {
