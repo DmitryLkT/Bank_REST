@@ -1,4 +1,4 @@
-package org.lukdt.bank_card_management.service.userService;
+package org.lukdt.bank_card_management.security;
 
 import org.lukdt.bank_card_management.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
