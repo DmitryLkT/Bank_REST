@@ -1,9 +1,6 @@
 package org.lukdt.bank_card_management.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.lukdt.bank_card_management.entity.Card;
-import org.lukdt.bank_card_management.util.EncryptionService;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -29,22 +26,16 @@ public class CardResponse {
 
     public CardResponse() {}
 
-    public CardResponse(Card card) {
-        this.cardNumber = maskCardNumber(card.getCardNumberEncrypted());
-        this.ownerName = card.getOwner().getName();
-        this.ownerSurname = card.getOwner().getSurname();
-        this.expiryDate = card.getExpiryDate();
-        this.status = card.getStatus().toString();
-        this.balance = card.getBalance();
+    public CardResponse(String cardNumber, String ownerName, String ownerSurname,
+                        LocalDate expiryDate, String status, BigDecimal balance) {
+        this.cardNumber = cardNumber;
+        this.ownerName = ownerName;
+        this.ownerSurname = ownerSurname;
+        this.expiryDate = expiryDate;
+        this.status = status;
+        this.balance = balance;
     }
-
-    private String maskCardNumber(String cardNumber) {
-        String number = EncryptionService.decryption(cardNumber)
-                                        .substring(12);
-
-        return String.format("**** **** **** %s", number);
-    }
-
+    
     public String getCardNumber() {
         return cardNumber;
     }
