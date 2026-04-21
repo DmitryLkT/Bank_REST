@@ -3,6 +3,7 @@ package org.lukdt.bank_card_management.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,14 +14,15 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+@Component
 public class EncryptionService {
     private static final Logger log = LoggerFactory.getLogger(EncryptionService.class);
     private static final String ALGORITHM = "AES";
 
-    @Value("${APP_ENCRYPTION_KEY}")
-    private static String secretKey;
+    @Value("${app.encryption.key}")
+    private String secretKey;
 
-    public static String encrypt(String data) {
+    public String encrypt(String data) {
         try {
             SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -41,7 +43,7 @@ public class EncryptionService {
         }
     }
 
-    public static String decryption(String data) {
+    public String decryption(String data) {
         try {
             SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
