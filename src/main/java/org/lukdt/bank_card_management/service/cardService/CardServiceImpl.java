@@ -21,12 +21,10 @@ public class CardServiceImpl implements CardService{
     private final UserService userService;
 
     @Override
-    public Page<CardResponse> getUserCards(Long userId, String query, Pageable pageable) {
-        if(!userService.existsById(userId)) {
-            throw new EntityNotFoundException("User not found with  id: " + userId);
-        }
+    public Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable) {
+        userService.existsById(ownerId);
 
-        Specification<Card> spec = buildSpecification(userId, query);
+        Specification<Card> spec = buildSpecification(ownerId, query);
 
         return cardRepository.findAll(spec, pageable).map(cardMapper::toResponse);
     }

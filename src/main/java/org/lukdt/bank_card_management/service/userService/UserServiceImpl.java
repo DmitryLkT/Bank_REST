@@ -1,5 +1,7 @@
 package org.lukdt.bank_card_management.service.userService;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.lukdt.bank_card_management.dto.UserResponse;
 import org.lukdt.bank_card_management.dto.authentication.LoginRequest;
 import org.lukdt.bank_card_management.dto.authentication.RegisterRequest;
 import org.lukdt.bank_card_management.dto.authentication.TokenResponse;
@@ -33,7 +35,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsById(Long userId) {
-        return userRepository.existsById(userId);
+        if(!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("User not found with  id: " + userId);
+        }
+        return true;
     }
 
     @Override
@@ -62,6 +67,19 @@ public class UserServiceImpl implements UserService {
         UserDetails user = (UserDetails) auth.getPrincipal();
 
         return jwtService.generateToken(user);
+    }
+
+    @Override
+    public UserResponse findByLogin(String login) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException());
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getAge(),
+                user.getUsername()
+        );
     }
 
 
