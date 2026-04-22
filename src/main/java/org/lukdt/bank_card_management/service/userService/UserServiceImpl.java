@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void register(RegisterRequest request) {
-        if(!userRepository.existsByLogin(request.getLogin())) {
+        if(userRepository.existsByLogin(request.getLogin())) {
             throw new UserAlreadyExistsException(request.getLogin());
         }
 
@@ -44,7 +47,9 @@ public class UserServiceImpl implements UserService {
                 request.getName(),
                 request.getSurname(),
                 request.getAge(),
-                Role.USER
+                Role.USER,
+                request.getLogin(),
+                passwordEncoder.encode(request.getPassword())
         ));
     }
 
