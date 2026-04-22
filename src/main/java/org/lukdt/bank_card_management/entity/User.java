@@ -85,6 +85,10 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
