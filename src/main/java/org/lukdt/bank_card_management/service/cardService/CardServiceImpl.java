@@ -65,6 +65,18 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    public Page<CardResponse> getAllCards(Long ownerId, Pageable pageable) {
+        Specification<Card> spec = Specification.where(null);
+
+        if(ownerId != null) {
+            spec = spec.and(CardSpecifications.ownerIdEquals(ownerId));
+        }
+
+        return cardRepository.findAll(spec, pageable)
+                .map(cardMapper::toResponse);
+    }
+
+    @Override
     public Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable) {
         userService.existsById(ownerId);
 

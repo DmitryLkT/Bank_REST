@@ -3,6 +3,9 @@ package org.lukdt.bank_card_management.controller;
 import org.lukdt.bank_card_management.dto.CardResponse;
 import org.lukdt.bank_card_management.service.adminService.adminServiceInterface.AdminService;
 import org.lukdt.bank_card_management.service.cardService.cardServiceInterface.CardService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,5 +63,13 @@ public class AdminController {
         adminService.unblockingUser(userId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/cards")
+    public ResponseEntity<Page<CardResponse>> getAllCards(
+            @RequestParam(required = false) Long ownerId,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        return ResponseEntity.ok(cardService.getAllCards(ownerId,pageable));
     }
 }

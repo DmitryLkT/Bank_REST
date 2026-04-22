@@ -15,9 +15,6 @@ import java.util.Optional;
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long>,
                                             JpaSpecificationExecutor<Card> {
-    Page<Card> findByOwnerId(Long ownerId, Pageable pageable);
-
-    Optional<Card> findByOwnerId(Long ownerId);
 
     Optional<Card> findByIdAndOwnerId(Long id, Long ownerId);
 
