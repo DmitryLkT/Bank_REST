@@ -61,6 +61,13 @@ public class AdminServiceImpl implements AdminService {
         cardRepository.save(card);
     }
 
+    @Override
+    public void removeCard(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow();//TODO прописать
+        cardRepository.delete(card);
+    }
+
     private String generationCardNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

@@ -6,4 +6,6 @@ public interface AdminService {
     CardResponse createCard(Long userId);
 
     void unblockingCard(Long cardId);
+
+    void removeCard(Long cardId);
 }

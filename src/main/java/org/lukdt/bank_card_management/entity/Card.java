@@ -89,7 +89,7 @@ public class Card {
     }
 
     public boolean isFlagBlock() {
-        return flagBlock;
+        return this.flagBlock;
     }
 
     public void setFlagBlock(boolean flagBlock) {

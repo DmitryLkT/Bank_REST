@@ -26,6 +26,8 @@ public class JwtService {
     public TokenResponse generateToken(UserDetails userDetails) {
         User user = (User) userDetails;
 
+        if(user.isAccountNonLocked()) return null;
+
         String token = Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole().name())
