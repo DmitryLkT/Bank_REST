@@ -30,4 +30,14 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
     }
+
+    @ExceptionHandler(CardNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handlerUserNotFound(CardNotFoundException e) {
+        return new ApiError(
+                404,
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+    }
 }

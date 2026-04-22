@@ -1,14 +1,13 @@
 package org.lukdt.bank_card_management.service.userService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.lukdt.bank_card_management.dto.UserResponse;
 import org.lukdt.bank_card_management.dto.authentication.LoginRequest;
 import org.lukdt.bank_card_management.dto.authentication.RegisterRequest;
 import org.lukdt.bank_card_management.dto.authentication.TokenResponse;
-import org.lukdt.bank_card_management.entity.Card;
 import org.lukdt.bank_card_management.entity.Role;
 import org.lukdt.bank_card_management.entity.User;
 import org.lukdt.bank_card_management.exception.customException.UserAlreadyExistsException;
+import org.lukdt.bank_card_management.exception.customException.UserNotFoundException;
 import org.lukdt.bank_card_management.repository.UserRepository;
 import org.lukdt.bank_card_management.security.jwt.JwtService;
 import org.lukdt.bank_card_management.service.userService.userServiceInterface.UserService;
@@ -19,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsById(Long userId) {
         if(!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User not found with  id: " + userId);
+            throw new UserNotFoundException(userId);
         }
         return true;
     }
@@ -75,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findByLogin(String login) {
         User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new UserNotFoundException(login));
         return new UserResponse(
                 user.getId(),
                 user.getName(),

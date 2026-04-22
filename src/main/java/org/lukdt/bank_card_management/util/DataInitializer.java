@@ -34,13 +34,11 @@ public class DataInitializer implements CommandLineRunner {
         log.info("Starting DataInitializer...");
 
         try {
-            // Проверка доступа к БД
             log.info("Checking database connection...");
             userRepository.count();
             cardRepository.count();
             log.info("Database connection OK");
 
-            // Создание администратора
             createAdminIfNotExists();
 
         } catch (Exception e) {
@@ -51,13 +49,12 @@ public class DataInitializer implements CommandLineRunner {
     private void createAdminIfNotExists() {
         log.info("Checking if admin exists...");
 
-        // Проверяем, существует ли администратор
         if (!userRepository.existsByLogin(adminLogin)) {
             log.info("Admin not found. Creating admin user...");
 
             User admin = new User();
             admin.setLogin(adminLogin);
-            admin.setPassword(passwordEncoder.encode(adminPass));  // ← Важно: кодируем пароль!
+            admin.setPassword(passwordEncoder.encode(adminPass));
             admin.setName("Admin");
             admin.setSurname("System");
             admin.setAge(30);

@@ -1,9 +1,9 @@
 package org.lukdt.bank_card_management.service.cardService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.lukdt.bank_card_management.dto.CardResponse;
 import org.lukdt.bank_card_management.entity.Card;
 import org.lukdt.bank_card_management.entity.Status;
+import org.lukdt.bank_card_management.exception.customException.CardNotFoundException;
 import org.lukdt.bank_card_management.repository.CardRepository;
 import org.lukdt.bank_card_management.repository.spec.CardSpecifications;
 import org.lukdt.bank_card_management.service.cardService.cardServiceInterface.CardService;
@@ -29,7 +29,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public void blockUserCard(Long userId, Long cardId) {
         Card card = cardRepository.findByIdAndOwnerId(cardId, userId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new CardNotFoundException(cardId));
 
         if(card.getStatus() == Status.BLOCKED) {throw new IllegalStateException("Card is already blocked");}
         if(card.getStatus() == Status.EXPIRED) {throw new IllegalStateException("Cannot block expired card");}
@@ -41,7 +41,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public void blockCardByAdmin(Long cardId) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new CardNotFoundException(cardId));
 
         if(!card.isFlagBlock()) {throw new IllegalStateException("The user did not request to be blocked");}
 
@@ -84,10 +84,10 @@ public class CardServiceImpl implements CardService{
         if(summa.compareTo(BigDecimal.ZERO) <= 0) { throw new IllegalStateException("Amount must be positive");}
 
         Card sender = cardRepository.findByIdAndOwnerId(senderId, userId)
-                .orElseThrow();//TODO
+                .orElseThrow(() -> new CardNotFoundException(senderId));
 
         Card recipient = cardRepository.findByIdAndOwnerId(recipientId, userId)
-                .orElseThrow();//TODO
+                .orElseThrow(() -> new CardNotFoundException(senderId));
 
         if(sender.getStatus() != Status.ACTIVE) {
             throw new IllegalStateException("Sender card is not active");
@@ -106,7 +106,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public BigDecimal getBalance(Long userId, Long cardId) {
         Card card = cardRepository.findByIdAndOwnerId(cardId, userId)
-                .orElseThrow();//todo
+                .orElseThrow(() -> new CardNotFoundException(cardId));
         return card.getBalance();
     }
 

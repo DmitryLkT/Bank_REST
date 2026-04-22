@@ -1,15 +1,14 @@
 package org.lukdt.bank_card_management.service.adminService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.lukdt.bank_card_management.dto.CardResponse;
-import org.lukdt.bank_card_management.dto.UserResponse;
 import org.lukdt.bank_card_management.entity.Card;
 import org.lukdt.bank_card_management.entity.Status;
 import org.lukdt.bank_card_management.entity.User;
+import org.lukdt.bank_card_management.exception.customException.CardNotFoundException;
+import org.lukdt.bank_card_management.exception.customException.UserNotFoundException;
 import org.lukdt.bank_card_management.repository.CardRepository;
 import org.lukdt.bank_card_management.repository.UserRepository;
 import org.lukdt.bank_card_management.service.adminService.adminServiceInterface.AdminService;
-import org.lukdt.bank_card_management.service.userService.userServiceInterface.UserService;
 import org.lukdt.bank_card_management.util.EncryptionService;
 import org.lukdt.bank_card_management.util.mapper.CardMapper;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public CardResponse createCard(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with  id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         String encrypt = encryptionService.encrypt(generationCardNumber());
 
@@ -53,7 +52,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void unblockingCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new CardNotFoundException(cardId));
 
         if(card.getStatus() == Status.ACTIVE) {throw new IllegalStateException("Card is already active");}
         if(card.getStatus() == Status.EXPIRED) {throw new IllegalStateException("Cannot block expired card");}
@@ -65,14 +64,14 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void removeCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new CardNotFoundException(cardId));
         cardRepository.delete(card);
     }
 
     @Override
     public void blockingUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         user.setLocked(true);
         userRepository.save(user);
@@ -81,7 +80,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void unblockingUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow();//TODO прописать
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         user.setLocked(false);
         userRepository.save(user);
