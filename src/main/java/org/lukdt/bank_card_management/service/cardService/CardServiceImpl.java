@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,6 +75,32 @@ public class CardServiceImpl implements CardService{
 
         return cardRepository.findAll(spec, pageable)
                 .map(cardMapper::toResponse);
+    }
+
+    @Override
+    @Transactional
+    public void moneyTransfer(Long userId, Long senderId, Long recipientId, BigDecimal summa){
+        if(senderId.equals(recipientId)) { throw new IllegalStateException("Cannot transfer to the same card");}
+        if(summa.compareTo(BigDecimal.ZERO) <= 0) { throw new IllegalStateException("Amount must be positive");}
+
+        Card sender = cardRepository.findByIdAndOwnerId(senderId, userId)
+                .orElseThrow();//TODO
+
+        Card recipient = cardRepository.findByIdAndOwnerId(recipientId, userId)
+                .orElseThrow();//TODO
+
+        if(sender.getStatus() != Status.ACTIVE) {
+            throw new IllegalStateException("Sender card is not active");
+        }
+        if(recipient.getStatus() != Status.ACTIVE) {
+            throw new IllegalStateException("Recipient card is not active");
+        }
+
+        sender.setBalance(sender.getBalance().subtract(summa));
+        recipient.setBalance(sender.getBalance().add(summa));
+
+        cardRepository.save(sender);
+        cardRepository.save(recipient);
     }
 
     @Override

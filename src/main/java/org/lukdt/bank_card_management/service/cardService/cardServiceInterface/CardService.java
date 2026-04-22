@@ -4,6 +4,8 @@ import org.lukdt.bank_card_management.dto.CardResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+
 public interface CardService {
     Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable);
 
@@ -14,4 +16,6 @@ public interface CardService {
     void blockCardByAdmin(Long cardId);
 
     int expireOutdatedCards();
+
+    void moneyTransfer(Long userId, Long senderId, Long recipientId, BigDecimal summa);
 }

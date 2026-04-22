@@ -1,6 +1,8 @@
 package org.lukdt.bank_card_management.controller;
 
+import jakarta.validation.Valid;
 import org.lukdt.bank_card_management.dto.CardResponse;
+import org.lukdt.bank_card_management.dto.TransferRequest;
 import org.lukdt.bank_card_management.entity.User;
 import org.lukdt.bank_card_management.service.cardService.cardServiceInterface.CardService;
 import org.lukdt.bank_card_management.service.userService.userServiceInterface.UserService;
@@ -42,6 +44,20 @@ public class UserController {
         Long ownerId = getUserIfFromUserDetails(userDetails);
 
         cardService.blockUserCard(ownerId, cardId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<Void> moneyTransfer(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody TransferRequest request) {
+        cardService.moneyTransfer(
+                user.getId(),
+                request.getSenderId(),
+                request.getRecipientId(),
+                request.getSumma()
+        );
+
         return ResponseEntity.ok().build();
     }
 
