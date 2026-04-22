@@ -3,6 +3,7 @@ package org.lukdt.bank_card_management.security.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
+import org.lukdt.bank_card_management.dto.authentication.TokenResponse;
 import org.lukdt.bank_card_management.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,10 +22,10 @@ public class JwtService {
     @Value("${JWT_EXPIRATION_TIME}")
     private Long expiration;
 
-    public String generateToken(UserDetails userDetails) {
+    public TokenResponse generateToken(UserDetails userDetails) {
         User user = (User) userDetails;
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole().name())
                 .claim("userId", user.getId())
@@ -32,6 +33,8 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
+
+        return new TokenResponse(token, user);
     }
 
     public String extractUsername(String token) {
