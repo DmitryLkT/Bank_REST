@@ -45,4 +45,12 @@
     <changeSet id="v1-2-drop-issue-date" author="Dmitry Lk">
         <dropColumn tableName="cards" columnName="issue_date"/>
     </changeSet>
+    
+    <changeSet id="v1-2-add-flag-block" author="Dmitry Lk">
+        <addColumn tableName="cards">
+            <column name="flag_block" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

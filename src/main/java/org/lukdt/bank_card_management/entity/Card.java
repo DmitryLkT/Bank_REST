@@ -30,6 +30,9 @@ public class Card {
     @Column(name="balance", nullable = false)
     private BigDecimal balance;
 
+    @Column(name="flag_block")
+    private boolean flagBlock;
+
     public Card() {}
 
     public Card(String cardNumberEncrypted, User owner, LocalDate expiryDate, Status status, BigDecimal balance) {
@@ -38,6 +41,7 @@ public class Card {
         this.expiryDate = expiryDate.plusYears(5);
         this.status = status;
         this.balance = balance;
+        this.flagBlock = false;
     }
 
     public Long getId() {
@@ -82,5 +86,13 @@ public class Card {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public boolean isFlagBlock() {
+        return flagBlock;
+    }
+
+    public void setFlagBlock(boolean flagBlock) {
+        this.flagBlock = flagBlock;
     }
 }
