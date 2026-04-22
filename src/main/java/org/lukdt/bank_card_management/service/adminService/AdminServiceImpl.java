@@ -49,6 +49,18 @@ public class AdminServiceImpl implements AdminService {
         return cardMapper.toResponse(savedCard);
     }
 
+    @Override
+    public void unblockingCard(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow();//TODO прописать
+
+        if(card.getStatus() == Status.ACTIVE) {throw new IllegalStateException("Card is already active");}
+        if(card.getStatus() == Status.EXPIRED) {throw new IllegalStateException("Cannot block expired card");}
+
+        card.setStatus(Status.ACTIVE);
+        cardRepository.save(card);
+    }
+
     private String generationCardNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

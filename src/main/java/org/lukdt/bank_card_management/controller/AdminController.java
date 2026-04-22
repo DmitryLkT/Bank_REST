@@ -36,4 +36,11 @@ public class AdminController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/cards/{cardId}/unblocking")
+    public ResponseEntity<Void> unblockingCardByAdmin(@PathVariable Long cardId) {
+        adminService.unblockingCard(cardId);
+
+        return ResponseEntity.ok().build();
+    }
 }
