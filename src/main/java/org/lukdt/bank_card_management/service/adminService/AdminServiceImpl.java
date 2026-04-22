@@ -1,0 +1,61 @@
+package org.lukdt.bank_card_management.service.adminService;
+
+import jakarta.persistence.EntityNotFoundException;
+import org.lukdt.bank_card_management.dto.CardResponse;
+import org.lukdt.bank_card_management.entity.Card;
+import org.lukdt.bank_card_management.entity.Status;
+import org.lukdt.bank_card_management.entity.User;
+import org.lukdt.bank_card_management.repository.CardRepository;
+import org.lukdt.bank_card_management.repository.UserRepository;
+import org.lukdt.bank_card_management.service.adminService.adminServiceInterface.AdminService;
+import org.lukdt.bank_card_management.service.userService.userServiceInterface.UserService;
+import org.lukdt.bank_card_management.util.EncryptionService;
+import org.lukdt.bank_card_management.util.mapper.CardMapper;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Random;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+    private final UserRepository userRepository;
+    private final CardRepository cardRepository;
+    private final EncryptionService encryptionService;
+    private final CardMapper cardMapper;
+
+    public AdminServiceImpl(UserRepository userRepository,CardRepository cardRepository, CardMapper cardMapper, EncryptionService encryptionService) {
+        this.userRepository = userRepository;
+        this.cardRepository = cardRepository;
+        this.cardMapper = cardMapper;
+        this.encryptionService = encryptionService;
+    }
+
+    @Override
+    public CardResponse createCard(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with  id: " + userId));
+
+        String encrypt = encryptionService.encrypt(generationCardNumber());
+
+        Card savedCard = cardRepository.save(new Card(
+                encrypt,
+                user,
+                LocalDate.now(),
+                Status.ACTIVE,
+                new BigDecimal(1000)
+        ));
+
+        return cardMapper.toResponse(savedCard);
+    }
+
+    private String generationCardNumber() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < 16; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
+    }
+}
