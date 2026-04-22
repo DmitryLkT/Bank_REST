@@ -21,6 +21,28 @@ public class CardServiceImpl implements CardService{
     private final UserService userService;
 
     @Override
+    public void blockUserCard(Long userId, Long cardId) {
+        Card card = cardRepository.findByIdAndOwnerId(cardId, userId)
+                .orElseThrow();//TODO прописать
+
+        if(card.getStatus() == Status.BLOCKED) {throw new IllegalStateException("Card is already blocked");}
+        if(card.getStatus() == Status.EXPIRED) {throw new IllegalStateException("Cannot block expired card");}
+
+        card.setFlagBlock(true);
+        cardRepository.save(card);
+    }
+
+    @Override
+    public void blockCardByAdmin(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow();//TODO прописать
+
+        if(!card.isFlagBlock()) {throw new IllegalStateException("The user did not request to be blocked");}
+
+        card.setStatus(Status.BLOCKED);
+        cardRepository.save(card);
+    }
+    @Override
     public Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable) {
         userService.existsById(ownerId);
 

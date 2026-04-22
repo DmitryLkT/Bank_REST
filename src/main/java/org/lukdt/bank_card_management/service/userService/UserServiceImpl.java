@@ -5,6 +5,7 @@ import org.lukdt.bank_card_management.dto.UserResponse;
 import org.lukdt.bank_card_management.dto.authentication.LoginRequest;
 import org.lukdt.bank_card_management.dto.authentication.RegisterRequest;
 import org.lukdt.bank_card_management.dto.authentication.TokenResponse;
+import org.lukdt.bank_card_management.entity.Card;
 import org.lukdt.bank_card_management.entity.Role;
 import org.lukdt.bank_card_management.entity.User;
 import org.lukdt.bank_card_management.exception.customException.UserAlreadyExistsException;
@@ -81,6 +82,5 @@ public class UserServiceImpl implements UserService {
                 user.getUsername()
         );
     }
-
 
 }
