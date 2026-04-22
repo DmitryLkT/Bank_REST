@@ -2,6 +2,7 @@ package org.lukdt.bank_card_management.service.adminService;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.lukdt.bank_card_management.dto.CardResponse;
+import org.lukdt.bank_card_management.dto.UserResponse;
 import org.lukdt.bank_card_management.entity.Card;
 import org.lukdt.bank_card_management.entity.Status;
 import org.lukdt.bank_card_management.entity.User;
@@ -66,6 +67,15 @@ public class AdminServiceImpl implements AdminService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow();//TODO прописать
         cardRepository.delete(card);
+    }
+
+    @Override
+    public void blockingUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow();//TODO прописать
+
+        user.setLocked(true);
+        userRepository.save(user);
     }
 
     private String generationCardNumber() {
