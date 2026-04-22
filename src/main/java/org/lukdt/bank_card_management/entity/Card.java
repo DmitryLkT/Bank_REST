@@ -35,7 +35,7 @@ public class Card {
     public Card(String cardNumberEncrypted, User owner, LocalDate expiryDate, Status status, BigDecimal balance) {
         this.cardNumberEncrypted = cardNumberEncrypted;
         this.owner = owner;
-        this.expiryDate = expiryDate;
+        this.expiryDate = expiryDate.plusYears(5);
         this.status = status;
         this.balance = balance;
     }

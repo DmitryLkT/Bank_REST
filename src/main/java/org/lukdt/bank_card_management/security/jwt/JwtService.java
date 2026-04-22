@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import org.lukdt.bank_card_management.dto.authentication.TokenResponse;
 import org.lukdt.bank_card_management.entity.User;
+import org.lukdt.bank_card_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

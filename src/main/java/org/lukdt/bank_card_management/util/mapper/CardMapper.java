@@ -29,7 +29,7 @@ public class CardMapper {
     }
 
     private String maskCardNumber(String cardNumber) {
-        String last4 = cardNumber.substring(0, cardNumber.length() - 4);
+        String last4 = cardNumber.substring(cardNumber.length() - 4);
 
         return String.format("**** **** **** %s", last4);
     }

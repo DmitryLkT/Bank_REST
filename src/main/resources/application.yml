@@ -1,6 +1,11 @@
 server:
   port: 8060
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.lukdt.bank_card_management: DEBUG
+
 spring:
   application:
     name: bank_card_management
