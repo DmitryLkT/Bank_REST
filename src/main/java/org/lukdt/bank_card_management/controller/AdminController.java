@@ -47,4 +47,18 @@ public class AdminController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/users/{userId}/block")
+    public ResponseEntity<Void> blockingUser(@PathVariable Long userId) {
+        adminService.blockingUser(userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/users/{userId}/unblocking")
+    public ResponseEntity<Void> unblockingUser(@PathVariable Long userId) {
+        adminService.unblockingUser(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }

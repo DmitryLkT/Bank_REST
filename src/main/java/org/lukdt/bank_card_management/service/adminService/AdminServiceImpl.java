@@ -78,6 +78,15 @@ public class AdminServiceImpl implements AdminService {
         userRepository.save(user);
     }
 
+    @Override
+    public void unblockingUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow();//TODO прописать
+
+        user.setLocked(false);
+        userRepository.save(user);
+    }
+
     private String generationCardNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

@@ -11,4 +11,6 @@ public interface AdminService {
     void removeCard(Long cardId);
 
     void blockingUser(Long userId);
+
+    void unblockingUser(Long userId);
 }
