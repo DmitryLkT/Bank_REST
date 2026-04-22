@@ -8,6 +8,7 @@ import org.lukdt.bank_card_management.repository.CardRepository;
 import org.lukdt.bank_card_management.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,11 @@ public class DataInitializer implements CommandLineRunner {
 
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+
+    @Value("${ADMIN_LOGIN}")
+    private String adminLogin;
+    @Value("${ADMIN_PASSWORD}")
+    private String adminPass;
 
     public DataInitializer(CardRepository cardRepository, UserRepository userRepository) {
         this.cardRepository = cardRepository;
@@ -37,6 +43,12 @@ public class DataInitializer implements CommandLineRunner {
             log.info("access verification");
             userRepository.count();
             cardRepository.count();
+
+            log.info("Cleaning old test data");
+            userRepository.findByLogin("login").ifPresent(oldUser -> {
+                cardRepository.findByOwnerId(oldUser.getId()).ifPresent(cardRepository::delete);
+                userRepository.delete(oldUser);
+            });
 
             log.info("Inserting test data");
             user = new User();
@@ -58,12 +70,13 @@ public class DataInitializer implements CommandLineRunner {
 
             log.info("test data OK: userId={}, cardId={}", user.getId(), card.getId());
 
+
+
         } catch(Exception e) {
             log.error("ERROR: {}", e.getMessage());
         } finally {
-            if(user != null) { userRepository.delete(user); }
             if(card != null) { cardRepository.delete(card); }
-
+            if(user != null) { userRepository.delete(user); }
         }
     }
 }
