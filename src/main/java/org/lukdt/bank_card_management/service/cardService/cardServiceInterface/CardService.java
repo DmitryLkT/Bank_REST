@@ -10,4 +10,6 @@ public interface CardService {
     void blockUserCard(Long userId, Long cardId);
 
     void blockCardByAdmin(Long cardId);
+
+    int expireOutdatedCards();
 }

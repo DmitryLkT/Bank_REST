@@ -12,7 +12,12 @@ import org.lukdt.bank_card_management.util.mapper.CardMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService{
@@ -42,6 +47,23 @@ public class CardServiceImpl implements CardService{
         card.setStatus(Status.BLOCKED);
         cardRepository.save(card);
     }
+
+    @Override
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public int expireOutdatedCards() {
+        LocalDate today = LocalDate.now();
+
+        List<Card> expiredCards = cardRepository.findByStatusAndExpiryDateBefore(Status.ACTIVE, today);
+
+        if(expiredCards.isEmpty()) return 0;
+
+        expiredCards.forEach(card -> card.setStatus(Status.EXPIRED));
+        cardRepository.saveAll(expiredCards);
+
+        return expiredCards.size();
+    }
+
     @Override
     public Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable) {
         userService.existsById(ownerId);
