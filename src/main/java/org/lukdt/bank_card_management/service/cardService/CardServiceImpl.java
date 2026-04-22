@@ -104,6 +104,13 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    public BigDecimal getBalance(Long userId, Long cardId) {
+        Card card = cardRepository.findByIdAndOwnerId(cardId, userId)
+                .orElseThrow();//todo
+        return card.getBalance();
+    }
+
+    @Override
     public Page<CardResponse> getUserCards(Long ownerId, String query, Pageable pageable) {
         userService.existsById(ownerId);
 

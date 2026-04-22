@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("bank/cards")
 public class UserController {
@@ -49,16 +51,29 @@ public class UserController {
 
     @PostMapping("/transfer")
     public ResponseEntity<Void> moneyTransfer(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody TransferRequest request) {
+        Long ownerId = getUserIfFromUserDetails(userDetails);
+
         cardService.moneyTransfer(
-                user.getId(),
+                ownerId,
                 request.getSenderId(),
                 request.getRecipientId(),
                 request.getSumma()
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{cardId}/balance")
+    public ResponseEntity<BigDecimal> getBalance(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long cardId) {
+        Long ownerId = getUserIfFromUserDetails(userDetails);
+
+        BigDecimal balance = cardService.getBalance(ownerId, cardId);
+
+        return ResponseEntity.ok(balance);
     }
 
     private Long getUserIfFromUserDetails(UserDetails userDetails) {

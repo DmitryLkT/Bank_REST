@@ -18,4 +18,6 @@ public interface CardService {
     int expireOutdatedCards();
 
     void moneyTransfer(Long userId, Long senderId, Long recipientId, BigDecimal summa);
+
+    BigDecimal getBalance(Long userId, Long cardId);
 }
