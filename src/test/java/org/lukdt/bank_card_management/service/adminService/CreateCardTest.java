@@ -82,7 +82,7 @@ public class CreateCardTest {
     }
 
     @Test
-    void createCardShouldThrowUserNotFoundExceptionWhenUserNotFound() {
+    void createCard_UserNotFound() {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
