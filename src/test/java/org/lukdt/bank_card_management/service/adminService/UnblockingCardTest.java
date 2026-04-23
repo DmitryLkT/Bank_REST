@@ -8,9 +8,6 @@ import org.lukdt.bank_card_management.entity.Status;
 import org.lukdt.bank_card_management.entity.User;
 import org.lukdt.bank_card_management.exception.customException.CardNotFoundException;
 import org.lukdt.bank_card_management.repository.CardRepository;
-import org.lukdt.bank_card_management.repository.UserRepository;
-import org.lukdt.bank_card_management.util.EncryptionService;
-import org.lukdt.bank_card_management.util.mapper.CardMapper;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class unblockingCardTest {
+public class UnblockingCardTest {
     @Mock
     private CardRepository cardRepository;
     @InjectMocks
