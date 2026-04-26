@@ -87,7 +87,7 @@ public class CardServiceImpl implements CardService{
                 .orElseThrow(() -> new CardNotFoundException(senderId));
 
         Card recipient = cardRepository.findByIdAndOwnerId(recipientId, userId)
-                .orElseThrow(() -> new CardNotFoundException(senderId));
+                .orElseThrow(() -> new CardNotFoundException(recipientId));
 
         if(sender.getStatus() != Status.ACTIVE) {
             throw new IllegalStateException("Sender card is not active");
@@ -97,7 +97,7 @@ public class CardServiceImpl implements CardService{
         }
 
         sender.setBalance(sender.getBalance().subtract(summa));
-        recipient.setBalance(sender.getBalance().add(summa));
+        recipient.setBalance(recipient.getBalance().add(summa));
 
         cardRepository.save(sender);
         cardRepository.save(recipient);
