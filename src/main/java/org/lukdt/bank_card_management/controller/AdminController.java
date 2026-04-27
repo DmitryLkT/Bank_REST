@@ -24,52 +24,52 @@ public class AdminController {
         this.cardService = cardService;
     }
 
-    @PostMapping("/{userId}/create")
-    public ResponseEntity<CardResponse> createCard(@PathVariable Long userId) {
-       CardResponse response = adminService.createCard(userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PatchMapping("/cards/{cardId}/block")
-    public ResponseEntity<Void> blockCardByAdmin(@PathVariable Long cardId) {
-        cardService.blockCardByAdmin(cardId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/cards/{cardId}/unblocking")
-    public ResponseEntity<Void> unblockingCardByAdmin(@PathVariable Long cardId) {
-        adminService.unblockingCard(cardId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/cards/delete/{cardId}")
-    public ResponseEntity<Void> removeCard(@PathVariable Long cardId) {
-        adminService.removeCard(cardId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/users/{userId}/block")
-    public ResponseEntity<Void> blockingUser(@PathVariable Long userId) {
-        adminService.blockingUser(userId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/users/{userId}/unblocking")
-    public ResponseEntity<Void> unblockingUser(@PathVariable Long userId) {
-        adminService.unblockingUser(userId);
-
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/cards")
     public ResponseEntity<Page<CardResponse>> getAllCards(
             @RequestParam(required = false) Long ownerId,
             @PageableDefault(size = 10) Pageable pageable) {
 
         return ResponseEntity.ok(cardService.getAllCards(ownerId,pageable));
+    }
+
+    @PostMapping("/cards/{userId}")
+    public ResponseEntity<CardResponse> createCard(@PathVariable Long userId) {
+       CardResponse response = adminService.createCard(userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/cards/block/{cardId}")
+    public ResponseEntity<Void> blockCardByAdmin(@PathVariable Long cardId) {
+        cardService.blockCardByAdmin(cardId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/cards/unblocking/{cardId}")
+    public ResponseEntity<Void> unblockingCardByAdmin(@PathVariable Long cardId) {
+        adminService.unblockingCard(cardId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/users/block/{userId}")
+    public ResponseEntity<Void> blockingUser(@PathVariable Long userId) {
+        adminService.blockingUser(userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/users/unblocking/{userId}")
+    public ResponseEntity<Void> unblockingUser(@PathVariable Long userId) {
+        adminService.unblockingUser(userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/cards/{cardId}")
+    public ResponseEntity<Void> removeCard(@PathVariable Long cardId) {
+        adminService.removeCard(cardId);
+
+        return ResponseEntity.ok().build();
     }
 }

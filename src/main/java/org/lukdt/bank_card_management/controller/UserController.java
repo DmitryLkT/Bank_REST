@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("bank/cards")
+@RequestMapping("/account")
 public class UserController {
     private final CardService cardService;
     private final UserService userService;
@@ -27,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/account")
+    @GetMapping("/cards")
     public ResponseEntity<Page<CardResponse>> getUserCards(
             @RequestParam(required = false) String query,
             @PageableDefault(size = 10) Pageable pageable,
@@ -37,6 +37,17 @@ public class UserController {
 
         Page<CardResponse> cards = cardService.getUserCards(ownerId, query, pageable);
         return ResponseEntity.ok(cards);
+    }
+
+    @GetMapping("/cards/{cardId}")
+    public ResponseEntity<BigDecimal> getBalance(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long cardId) {
+        Long ownerId = getUserIfFromUserDetails(userDetails);
+
+        BigDecimal balance = cardService.getBalance(ownerId, cardId);
+
+        return ResponseEntity.ok(balance);
     }
 
     @PatchMapping("/{cardId}/block")
@@ -63,17 +74,6 @@ public class UserController {
         );
 
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{cardId}/balance")
-    public ResponseEntity<BigDecimal> getBalance(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Long cardId) {
-        Long ownerId = getUserIfFromUserDetails(userDetails);
-
-        BigDecimal balance = cardService.getBalance(ownerId, cardId);
-
-        return ResponseEntity.ok(balance);
     }
 
     private Long getUserIfFromUserDetails(UserDetails userDetails) {
